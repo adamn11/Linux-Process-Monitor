@@ -17,8 +17,6 @@ import time
 #import xlwt
 from datetime import datetime, timedelta
 
-app_version = "v1.0.0"
-
 # Creates a folder that stores the output files of the program
 def create_folder():
     '''Creates a folder that stores the output files of the program'''
