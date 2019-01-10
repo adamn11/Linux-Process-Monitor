@@ -17,8 +17,6 @@ import time
 #import xlwt
 from datetime import datetime, timedelta
 
-app_version = "v1.0.0"
-
 # Creates a folder that stores the output files of the program
 def create_folder():
     '''Creates a folder that stores the output files of the program'''
@@ -64,17 +62,10 @@ def mem_monitor(process):
 
     with open(full_name, "w") as txt_file:
         counter = 0
-        infinite = False
-
         txt_file.write("Date        Time       MEM         Total        Percentage\n")
-        # If user enters 0, program will record forever until manually canceled
-        if process.stop_point == 0:
-            infinite = True
-            process.stop_point += 1
+
         try:
-            while counter != process.stop_point:
-                if infinite is True:
-                    process.stop_point += 1
+            while process.stop_point == 0:
                 # FIXME: use stdout with communicate()
                 start = time.time()  # Used to correctly end the program at stop point
                 top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (process.pid_num, '10'), shell=True, stdout=subprocess.PIPE, )
