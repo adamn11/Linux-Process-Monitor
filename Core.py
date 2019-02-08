@@ -44,7 +44,6 @@ def calculate_process_memory_usage(proc_usage, total_memory):
         if "\n" not in proc_usage:
             return round((((float(proc_usage) / 100) * int(total_memory))), 2)
     except ValueError as e:
-        # TODO: Log error into text file
         print 'Application has been closed'
         print repr(e)
         sys.exit(1)
