@@ -40,10 +40,12 @@ def get_total_mem():
 def calculate_process_memory_usage(proc_usage, total_memory):
     '''Calculates memory in kb using process percentage and total memory of the system'''
     try:
-        return round((((float(proc_usage) / 100) * int(total_memory))), 2)
+        if "\n" not in proc_usage:
+            return round((((float(proc_usage) / 100) * int(total_memory))), 2)
     except ValueError as e:
         # TODO: Log error into text file
         print 'Application has been closed'
+        print repr(e)
         sys.exit(1)
 
 def mem_monitor(process):
@@ -70,7 +72,6 @@ def mem_monitor(process):
                 start = time.time()  # Used to correctly end the program at stop point
                 top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (process.pid_num, '10'), shell=True, stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
-                #print repr(calculate_process_memory_usage(mem_percent_output, total_mem))  # Comment out if you don't want values to show during execution
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
                 print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
