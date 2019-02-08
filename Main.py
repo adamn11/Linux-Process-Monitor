@@ -17,8 +17,6 @@ import time
 #import xlwt
 from datetime import datetime, timedelta
 
-app_version = "v1.0.0"
-
 # Creates a folder that stores the output files of the program
 def create_folder():
     '''Creates a folder that stores the output files of the program'''
@@ -42,10 +40,12 @@ def get_total_mem():
 def calculate_process_memory_usage(proc_usage, total_memory):
     '''Calculates memory in kb using process percentage and total memory of the system'''
     try:
-        return round((((float(proc_usage) / 100) * int(total_memory))), 2)
+        if "\n" not in proc_usage:
+            return round((((float(proc_usage) / 100) * int(total_memory))), 2)
     except ValueError as e:
         # TODO: Log error into text file
         print 'Application has been closed'
+        print repr(e)
         sys.exit(1)
 
 def mem_monitor(process):
@@ -64,24 +64,17 @@ def mem_monitor(process):
 
     with open(full_name, "w") as txt_file:
         counter = 0
-        infinite = False
-
         txt_file.write("Date        Time       MEM         Total        Percentage\n")
-        # If user enters 0, program will record forever until manually canceled
-        if process.stop_point == 0:
-            infinite = True
-            process.stop_point += 1
+
         try:
-            while counter != process.stop_point:
-                if infinite is True:
-                    process.stop_point += 1
+            while process.stop_point == 0:
                 # FIXME: use stdout with communicate()
                 start = time.time()  # Used to correctly end the program at stop point
                 top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (process.pid_num, '10'), shell=True, stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
-                #print repr(calculate_process_memory_usage(mem_percent_output, total_mem))  # Comment out if you don't want values to show during execution
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
+                print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
                 txt_file.write("{} | {} | {} / {} kB | {}%\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
 
