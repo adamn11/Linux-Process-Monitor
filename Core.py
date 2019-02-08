@@ -1,5 +1,6 @@
 from Process import Process
 import version
+import Validations as v
 
 # To record in offline mode, comment out:
 #   - convert_to_excel()
@@ -68,13 +69,12 @@ def mem_monitor(process):
 
         try:
             while process.stop_point == 0:
-                # FIXME: use stdout with communicate()
-                start = time.time()  # Used to correctly end the program at stop point
+                start = time.time()
                 top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (process.pid_num, '10'), shell=True, stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
-                print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
+                #print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
                 txt_file.write("{} | {} | {} / {} kB | {}%\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
 
@@ -131,7 +131,7 @@ def unix_to_windows(file_name):
     output_folder_dir = create_folder()
     unix_text = format_string_to_unix(file_name)
     subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text), shell=True)
-    time.sleep(1)  # Sleeps so that the creation of windowstxt.txt will be completed
+    time.sleep(1)
 
 def format_string_to_unix(file_name):
     '''Converts string ot be readable in unix'''
@@ -145,24 +145,11 @@ def format_string_to_unix(file_name):
 
     return file_name
 
-def process_validation(pro_name):
-    '''Checks if the process ID is valid'''
-    while True:
-        try:
-            pid_num = subprocess.check_output("pgrep %s" % pro_name,
-                                              shell=True)
-        except subprocess.CalledProcessError as e:
-            print "Not a valid process"
-        else:
-            break
-    return pid_num
-
 def plot_data(process, execution_time):
     '''Reads from text file and plots data into graph'''
     print "Plotting data..."
     file_path = create_folder()
 
-    # Skip first line of text file
     with open("%s/%s.txt" % (file_path, process.get_file_name())) as t:
         data = t.readlines()[1:]
 
@@ -215,60 +202,18 @@ def end_message(execution_time):
                                                 time.gmtime(execution_time))
     print "Program has finished executing. Files are located at %s\n" % create_folder()
 
-def refreshtime_validation():
-    '''Validates that the Refresh Time stays within the bounds > 0'''
-    while True:
-        try:
-            runtime_input = float(raw_input("Enter Refresh Time (in seconds): "))
-        except ValueError:
-            print "\n**Please enter a valid number (Must be an integer).**\n"
-            continue
-        if runtime_input <= 0:
-            print "\n**Please enter a valid number (Must be greater than 0).**\n"
-            continue
-        else:
-            return runtime_input
-
-def stop_point_validation():
-    '''Validates that the Stop Point stays within the bounds > 0'''
-    while True:
-        try:
-            stop_point_input = int(raw_input("Choose how long to run the program for (in seconds). Type 0 for manual cancelation: "))
-        except ValueError:
-            print "\n**Please enter a valid number (Must be an integer).**\n"
-            continue
-        if stop_point_input < 0:
-            print "\n**Please enter a valid number (Must be 0 or greater).**\n"
-            continue
-        else:
-            return stop_point_input
-
-def pid_input_validation(list):
-    '''Validates that the user chooses a valid PID (Within the available PID)'''
-    while True:
-        try:
-            pid_input = int(raw_input("Select a PID to use: "))
-        except ValueError:
-            print "Please enter a valid input (Select a PID)."
-            continue
-        if str(pid_input) not in list:
-            print "Please enter a valid input (Select a PID)."
-            continue
-        else:
-            return pid_input
-
 def check_number_of_processes(pid_list):
     '''Lets users choose the process to record if the process has more than one ID'''
     if len(pid_list) > 1:
         for x in pid_list:
             print x
-        pid_input = pid_input_validation(pid_list)
+        pid_input = v.pid_input_validation(pid_list)
         return pid_input
-    else:  # Return if there is only one PID
+    else: 
         return pid_list[0]
 
 def convert_pid_to_list(pid):
-    '''Converts the proces string into a list'''
+    '''Converts the process string into a list'''
     pid_str = ""
     pid_list = []
 
@@ -283,14 +228,14 @@ def convert_pid_to_list(pid):
 
 def get_process_info():
     '''Gets process information from user and initializes Process class'''
-    pro_name = raw_input("Enter process name: ")
-    pid_output = process_validation(pro_name)
+    pro_name = v.process_validation()
+    pid_output = pro_name[1]
     pid_list = convert_pid_to_list(pid_output)
     pid_num = check_number_of_processes(pid_list)
 
-    process_name = pro_name.strip()
-    refresh_time = refreshtime_validation()
-    stop_point = stop_point_validation()
+    process_name = pro_name[0].strip()
+    refresh_time = v.refreshtime_validation()
+    stop_point = v.stop_point_validation()
 
     process = Process(process_name, refresh_time, stop_point,
                       pid_num, time.strftime("%m-%d-%Y %H:%M"))
@@ -308,7 +253,7 @@ def main():
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
     #convert_to_excel(process.get_file_name())
-    execution_time = time.time() - start - 1  # Takes into account unix_to_windows sleeping
+    execution_time = time.time() - start - 1
     #plot_data(process, execution_time)
     end_message(execution_time)
 
