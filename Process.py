@@ -15,3 +15,6 @@ class Process(object):
 
     def get_file_name(self):
         return "%s (%s)" % (self.process_name, self.start_time)
+
+    def set_new_pid(self, new_pid):
+        self.pid_num = new_pid 
