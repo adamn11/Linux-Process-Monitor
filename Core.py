@@ -223,16 +223,17 @@ def convert_pid_to_list(pid):
             pid_str = ""
             continue
         pid_str += x
-    print pid_list
+
     return pid_list
 
 def get_process_info():
     '''Gets process information from user and initializes Process class'''
-    pid_output = v.process_validation()
+    pro_name = v.process_validation()
+    pid_output = pro_name[1]
     pid_list = convert_pid_to_list(pid_output)
     pid_num = check_number_of_processes(pid_list)
 
-    process_name = pro_name.strip()
+    process_name = pro_name[0].strip()
     refresh_time = v.refreshtime_validation()
     stop_point = v.stop_point_validation()
 
