@@ -68,13 +68,12 @@ def mem_monitor(process):
 
         try:
             while process.stop_point == 0:
-                # FIXME: use stdout with communicate()
-                start = time.time()  # Used to correctly end the program at stop point
+                start = time.time()
                 top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (process.pid_num, '10'), shell=True, stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
-                print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
+                #print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
                 txt_file.write("{} | {} | {} / {} kB | {}%\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
 
@@ -131,7 +130,7 @@ def unix_to_windows(file_name):
     output_folder_dir = create_folder()
     unix_text = format_string_to_unix(file_name)
     subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text), shell=True)
-    time.sleep(1)  # Sleeps so that the creation of windowstxt.txt will be completed
+    time.sleep(1)
 
 def format_string_to_unix(file_name):
     '''Converts string ot be readable in unix'''
@@ -162,7 +161,6 @@ def plot_data(process, execution_time):
     print "Plotting data..."
     file_path = create_folder()
 
-    # Skip first line of text file
     with open("%s/%s.txt" % (file_path, process.get_file_name())) as t:
         data = t.readlines()[1:]
 
@@ -308,7 +306,7 @@ def main():
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
     #convert_to_excel(process.get_file_name())
-    execution_time = time.time() - start - 1  # Takes into account unix_to_windows sleeping
+    execution_time = time.time() - start - 1
     #plot_data(process, execution_time)
     end_message(execution_time)
 
