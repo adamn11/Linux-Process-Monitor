@@ -166,7 +166,7 @@ def get_process_info():
 
     return process
 
-def main():
+if __name__ == "__main__":
     '''Main function'''
     # To record in offline mode, comment out concert_to_excel() and plot_data()
     print "Process Monitor: %s" % version.__version__ 
@@ -180,6 +180,3 @@ def main():
     execution_time = time.time() - start - 1
     #plot.plot_data(process, execution_time, create_folder())
     end_message(execution_time)
-
-if __name__ == "__main__":
-    main()
