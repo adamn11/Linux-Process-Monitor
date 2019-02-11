@@ -14,3 +14,4 @@ without the packages.
 2. sudo apt-get install python2 
 3. sudo apt-get install python-matplotlib 
 4. sudo apt-get install install xlwt
+5. sudo apt-get install python-tk
