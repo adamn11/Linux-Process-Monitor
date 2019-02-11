@@ -1,14 +1,7 @@
 from Process import Process
 import version
 import Validations as v
-import Plot_data as plot
-
-# To record in offline mode, comment out:
-#   - convert_to_excel()
-#   - plot_data()
-#   - import matplotlib
-#   - import matplotlib.pyplot as plt
-#   - import xlwt
+#import Plot_data as plot
 
 import sys
 import os
@@ -74,7 +67,7 @@ def mem_monitor(process):
                 current_date = datetime.now() 
                 #print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
-                txt_file.write("{} | {} | {} / {} kB | {}%\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
+                txt_file.write("{} | {} | {} / {} kB | {} %\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
 
                 txt_file.flush()
 
@@ -86,14 +79,6 @@ def mem_monitor(process):
             print "The file does not exist"
             sys.exit(1)
     txt_file.close()
-
-def is_number(s):
-    '''Returns true if value passed through is a number.'''
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
 
 def unix_to_windows(file_name):
     '''Converts unix text file to be readable on window machines'''
@@ -192,9 +177,9 @@ def main():
     start = time.time()
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
-    plot.convert_to_excel(process.get_file_name())
+    #plot.convert_to_excel(process.get_file_name(), create_folder())
     execution_time = time.time() - start - 1
-    plot.plot_data(process, execution_time)
+    #plot.plot_data(process, execution_time, create_folder())
     end_message(execution_time)
 
 if __name__ == "__main__":

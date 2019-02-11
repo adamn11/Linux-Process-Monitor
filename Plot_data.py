@@ -1,14 +1,14 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import xlwt
+import time
 
 
-def convert_to_excel(file_name):
+def convert_to_excel(file_name, path):
     '''Converts text file created from mem_monitor() to an excel sheet'''
     print "Formatting text file to excel..."
     style = xlwt.XFStyle()
     style.num_format_str = "#,###0.00"
-    path = create_folder()
     f = open(r"%s/windowstxt.txt" % path, 'r+')
     row_list = []
 
@@ -31,16 +31,15 @@ def convert_to_excel(file_name):
 
     workbook.save(r'/%s/monitor_output.xls' % path)
 
-def plot_data(process, execution_time):
+def plot_data(process, execution_time, file_path):
     '''Reads from text file and plots data into graph'''
     print "Plotting data..."
-    file_path = create_folder()
 
     with open("%s/%s.txt" % (file_path, process.get_file_name())) as t:
         data = t.readlines()[1:]
 
-    x = [row.split()[0] for row in data]  # Time
-    y = [row.split()[1] for row in data]  # Top column
+    x = [row.split()[2] for row in data]  # Time
+    y = [row.split()[9] for row in data]  # Memory Percentage
 
     fig = plt.figure()
 
@@ -60,3 +59,11 @@ def plot_data(process, execution_time):
     fig.savefig("%s/graph.png" % file_path)
 
     plt.show()
+
+def is_number(s):
+    '''Returns true if value passed through is a number.'''
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
