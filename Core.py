@@ -1,24 +1,15 @@
 from Process import Process
 import version
 import Validations as v
-
-# To record in offline mode, comment out:
-#   - convert_to_excel()
-#   - plot_data()
-#   - import matplotlib
-#   - import matplotlib.pyplot as plt
-#   - import xlwt
+#import Plot_data as plot
 
 import sys
 import os
 import subprocess
 import time
-#import matplotlib
-#import matplotlib.pyplot as plt
-#import xlwt
 from datetime import datetime, timedelta
 
-# Creates a folder that stores the output files of the program
+
 def create_folder():
     '''Creates a folder that stores the output files of the program'''
     current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -75,7 +66,7 @@ def mem_monitor(process):
                 current_date = datetime.now() 
                 #print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
-                txt_file.write("{} | {} | {} / {} kB | {}%\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
+                txt_file.write("{} | {} | {} / {} kB | {} %\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
 
                 txt_file.flush()
 
@@ -87,42 +78,6 @@ def mem_monitor(process):
             print "The file does not exist"
             sys.exit(1)
     txt_file.close()
-
-def convert_to_excel(file_name):
-    '''Converts text file created from mem_monitor() to an excel sheet'''
-    print "Formatting text file to excel..."
-    style = xlwt.XFStyle()
-    style.num_format_str = "#,###0.00"
-    path = create_folder()
-    f = open(r"%s/windowstxt.txt" % path, 'r+')
-    row_list = []
-
-    for row in f:
-        row_list.append(row.split(' '))
-
-    column_list = zip(*row_list)
-    workbook = xlwt.Workbook()
-    worksheet = workbook.add_sheet('Sheet1')
-
-    i = 0
-    for column in column_list:
-        for item in range(len(column)):
-            value = column[item].strip()
-            if is_number(value):
-                worksheet.write(item, i, float(value), style=style)
-            else:
-                worksheet.write(item, i, value)
-        i += 1
-
-    workbook.save(r'/%s/monitor_output.xls' % path)
-
-def is_number(s):
-    '''Returns true if value passed through is a number.'''
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
 
 def unix_to_windows(file_name):
     '''Converts unix text file to be readable on window machines'''
@@ -143,36 +98,6 @@ def format_string_to_unix(file_name):
         count += 1
 
     return file_name
-
-def plot_data(process, execution_time):
-    '''Reads from text file and plots data into graph'''
-    print "Plotting data..."
-    file_path = create_folder()
-
-    with open("%s/%s.txt" % (file_path, process.get_file_name())) as t:
-        data = t.readlines()[1:]
-
-    x = [row.split()[0] for row in data]  # Time
-    y = [row.split()[1] for row in data]  # Top column
-
-    fig = plt.figure()
-
-    ax = fig.add_subplot(111)
-    ax.set_title("%s Memory Monitor (Runtime: %s)" % (process.process_name,
-                    time.strftime("%H hr, %M min, %S sec",
-                    time.gmtime(execution_time))))
-    ax.set_xlabel("Time (%s Second Intervals)" % process.refresh_time)
-    ax.set_ylabel("Memory (in mb)")
-    dates = matplotlib.dates.datestr2num(x)
-    ax.xaxis.set_major_formatter(matplotlib.
-                                 dates.DateFormatter('%d/%m/%Y %H:%M:%S'))
-    ax.plot_date(dates, y, ls='-', marker='o')
-
-    fig.autofmt_xdate(rotation=45)
-    fig.tight_layout()
-    fig.savefig("%s/graph.png" % file_path)
-
-    plt.show()
 
 def confirmation_page(process):
     '''Displays all the information to user before recording memory'''
@@ -251,9 +176,9 @@ def main():
     start = time.time()
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
-    #convert_to_excel(process.get_file_name())
+    #plot.convert_to_excel(process.get_file_name(), create_folder())
     execution_time = time.time() - start - 1
-    #plot_data(process, execution_time)
+    #plot.plot_data(process, execution_time, create_folder())
     end_message(execution_time)
 
 if __name__ == "__main__":
