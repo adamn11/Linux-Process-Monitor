@@ -15,5 +15,8 @@ v1.1.7     02/08/19 - !Renamed Main.py to Core.py
                     - Fixed stop point bug
 
 v1.2.7     02/11/19 - !Moved plotting methods to separate file
+
+v1.3.7     02/12/19 - !Added a check to see if dependencies are installed. Will not
+                      plot if dependences are not installed.
 '''
 
