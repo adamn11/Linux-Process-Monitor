@@ -1,7 +1,6 @@
 from Process import Process
 import version
 import Validations as v
-#import Plot_data as plot
 
 import sys
 import os
@@ -65,10 +64,9 @@ def mem_monitor(process):
                 mem_percent_output = top_output.stdout.read().strip()
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
-                #print repr("%s %s" % (current_time, calculate_process_memory_usage(mem_percent_output, total_mem)))  # Comment out if you don't want values to show during execution
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
+                
                 txt_file.write("{} | {} | {} / {} kB | {} %\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
-
                 txt_file.flush()
 
                 counter += float(process.refresh_time)
