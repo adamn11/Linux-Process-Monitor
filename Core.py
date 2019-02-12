@@ -7,6 +7,7 @@ import sys
 import os
 import subprocess
 import time
+import imp
 from datetime import datetime, timedelta
 
 
@@ -166,9 +167,32 @@ def get_process_info():
 
     return process
 
+def get_dependencies():
+    ''' Get a list of dependences that will be used in check_modules_exist()'''
+    dep = []
+    with open("dependencies.txt", "r") as txt:
+        for lines in txt:
+            dep.append(lines.partition(" ")[0])
+
+    return dep
+
+def check_modules_exist():
+    '''Check if modules are installed. If not then plotting will not be done'''
+    list_mods = get_dependencies()
+
+    for mods in list_mods:
+        try:
+            imp.find_module(mods)
+        except ImportError as e:
+            print e
+            print "Plotting will not execute since there is a module missing"
+            return False
+    return True
+
+
 if __name__ == "__main__":
     '''Main function'''
-    # To record in offline mode, comment out concert_to_excel() and plot_data()
+
     print "Process Monitor: %s" % version.__version__ 
     process = get_process_info()
     confirmation_page(process)
@@ -176,7 +200,11 @@ if __name__ == "__main__":
     start = time.time()
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
-    #plot.convert_to_excel(process.get_file_name(), create_folder())
     execution_time = time.time() - start - 1
-    #plot.plot_data(process, execution_time, create_folder())
+
+    if check_modules_exist():
+        plot.convert_to_excel(process.get_file_name(), create_folder())
+        plot.plot_data(process, execution_time, create_folder())
+
     end_message(execution_time)
+
