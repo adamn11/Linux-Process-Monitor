@@ -1,6 +1,7 @@
 from Process import Process
 import version
 import Validations as v
+import Plot_data as plot
 
 import sys
 import os
