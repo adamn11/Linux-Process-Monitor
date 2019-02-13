@@ -1,4 +1,4 @@
-__version__ = "v1.2.7"
+__version__ = "v1.3.8"
 
 '''
 v1.0.0     12/04/18 - Working version of program 
@@ -18,5 +18,7 @@ v1.2.7     02/11/19 - !Moved plotting methods to separate file
 
 v1.3.7     02/12/19 - !Added a check to see if dependencies are installed. Will not
                       plot if dependences are not installed.
+
+v1.3.8     02/13/19 - Fixed importing modules issue
 '''
 
