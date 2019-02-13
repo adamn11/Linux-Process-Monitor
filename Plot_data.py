@@ -2,7 +2,18 @@ import time
 
 
 def convert_to_excel(file_name, path):
-    '''Converts text file created from mem_monitor() to an excel sheet'''
+    '''Converts text file created from mem_monitor() to an excel sheet
+    
+    Args:
+        file_name (string):
+        path (string):
+
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     import xlwt
 
     print "Formatting text file to excel..."
@@ -30,8 +41,20 @@ def convert_to_excel(file_name, path):
 
     workbook.save(r'/%s/monxlwtitor_output.xls' % path)
 
-def plot_data(process, execxlwtution_time, file_path):
-    '''Reads from text file and plots data into graph'''
+def plot_data(process, execution_time, file_path):
+    '''Reads from text file and plots data into graph
+    
+    Args:
+        process (process class): Uses data from Process class
+        execution_time (time): How long the monitoring process will run for in seconds
+        file_path (string): Output_file folder path
+
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     import matplotlib
     import matplotlib.pyplot as plt
 
@@ -63,7 +86,18 @@ def plot_data(process, execxlwtution_time, file_path):
     plt.show()
 
 def is_number(s):
-    '''Returns true if value passed through is a number.'''
+    '''Returns true if value passed through is a number.
+    
+    Args:
+        s: check if s is a number
+
+    Returns:
+        True: is a number
+        False: is not a number
+
+    Raises:
+        ValueError: is not a number
+    '''
     try:
         float(s)
         return True
