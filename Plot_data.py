@@ -1,11 +1,10 @@
-import matplotlib
-import matplotlib.pyplot as plt
-import xlwt
 import time
 
 
 def convert_to_excel(file_name, path):
     '''Converts text file created from mem_monitor() to an excel sheet'''
+    import xlwt
+
     print "Formatting text file to excel..."
     style = xlwt.XFStyle()
     style.num_format_str = "#,###0.00"
@@ -29,10 +28,13 @@ def convert_to_excel(file_name, path):
                 worksheet.write(item, i, value)
         i += 1
 
-    workbook.save(r'/%s/monitor_output.xls' % path)
+    workbook.save(r'/%s/monxlwtitor_output.xls' % path)
 
-def plot_data(process, execution_time, file_path):
+def plot_data(process, execxlwtution_time, file_path):
     '''Reads from text file and plots data into graph'''
+    import matplotlib
+    import matplotlib.pyplot as plt
+
     print "Plotting data..."
 
     with open("%s/%s.txt" % (file_path, process.get_file_name())) as t:
