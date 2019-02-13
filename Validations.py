@@ -2,7 +2,17 @@ import subprocess
 
 
 def process_validation():
-    '''Checks if the process ID is valid'''
+    '''Checks if the process ID is valid
+    
+    Args:
+        None
+
+    Returns (Tuple):
+        Returns the process name and PID number as a tuple
+
+    Raises:
+        None
+    '''
     while True:
         try:
             pro_name = raw_input("Enter process name: ")
@@ -15,7 +25,17 @@ def process_validation():
             return (pro_name, pid_num)
 
 def refreshtime_validation():
-    '''Validates that the Refresh Time stays within the bounds > 0'''
+    '''Validates that the Refresh Time stays within the bounds > 0
+    
+    Args:
+        None
+
+    Returns (float):
+        Returns user input for refresh time in seconds
+
+    Raises:
+        None
+    '''
     while True:
         try:
             runtime_input = float(raw_input("Enter Refresh Time (in seconds): "))
@@ -29,7 +49,17 @@ def refreshtime_validation():
             return runtime_input
 
 def stop_point_validation():
-    '''Validates that the Stop Point stays within the bounds > 0'''
+    '''Validates that the Stop Point stays within the bounds > 0'
+    
+    Args:
+        None
+
+    Returns (int):
+        Returns users input for stop point in seconds
+
+    Raises:
+        None
+    '''
     while True:
         try:
             stop_point_input = int(raw_input("Choose how long to run the program for (in seconds). Type 0 for manual cancelation: "))
@@ -43,7 +73,17 @@ def stop_point_validation():
             return stop_point_input
 
 def pid_input_validation(list):
-    '''Validates that the user chooses a valid PID (Within the available PID)'''
+    '''Validates that the user chooses a valid PID (Within the available PID)
+    
+    Args:
+        None
+
+    Returns (int):
+        Returns user input for PID
+
+    Raises:
+        None
+    '''
     while True:
         try:
             pid_input = int(raw_input("Select a PID to use: "))
