@@ -12,7 +12,19 @@ from datetime import datetime, timedelta
 
 
 def create_folder():
-    '''Creates a folder that stores the output files of the program'''
+    '''Creates a folder that stores the output files of the program
+    
+    Args:
+        None
+
+    Returns (String):
+        Returns the absolute path for Output File folder
+        Example: "/Document/Linux-Process-Monitor/Output_Files"
+
+    Raises:
+        None
+    '''
+
     current_dir = os.path.dirname(os.path.realpath(__file__))
     new_folder = os.path.join(current_dir, 'Output_Files')
 
@@ -22,16 +34,49 @@ def create_folder():
     return new_folder
 
 def show_eta(seconds_to_completion):
-    '''If program is not infinite, then show the date and time of when the program will finish running.'''
+    '''If program is not infinite, then show the date and time of when the program will finish running.
+    
+    Args:
+        seconds_to_completion (int): how many seconds the program will be running for
+
+    Returns (String):
+        Returns the time till completion
+
+    Raises:
+        None
+    '''
+
     return datetime.now() + timedelta(seconds=seconds_to_completion)
 
 def get_total_mem():
-    '''Gets the total system RAM memory from /proc/meminfo. Only works on Linux machines'''
+    '''Gets the total system RAM memory from /proc/meminfo. Only works on Linux machines
+
+    Args:
+        None
+
+    Returns (String):
+        Returns the total system RAM memory
+
+    Raises:
+        None
+    
+    '''
     meminfo_output = subprocess.Popen('awk \'/MemTotal/ {print $2}\' /proc/meminfo', shell=True, stdout=subprocess.PIPE, )
     return meminfo_output.stdout.read().strip()
 
 def calculate_process_memory_usage(proc_usage, total_memory):
-    '''Calculates memory in kb using process percentage and total memory of the system'''
+    '''Calculates memory in kb using process percentage and total memory of the system
+    
+    Args:
+        proc_usage (String): Taken from top command used in linux. Process usage in percent
+        total_memory (String): Taken from get_total_mem(). Total RAM mem
+
+    Returns (Int):
+        Returns process memory usage in kbs
+
+    Raises:
+        ValueError: If the application closes, then close the program
+    '''
     try:
         if "\n" not in proc_usage:
             return round((((float(proc_usage) / 100) * int(total_memory))), 2)
@@ -41,7 +86,18 @@ def calculate_process_memory_usage(proc_usage, total_memory):
         sys.exit(1)
 
 def mem_monitor(process):
-    '''Reads data from top command and records in text file'''
+    '''Reads data from top command and records in text file
+    
+    Args:
+        process (Process class): Uses data from Process class for monitoring 
+
+    Returns:
+        None
+
+    Raises:
+        KeyboardInterrupt: Ends monitoring process when Ctrl+C is pressed by the user
+        IOError: Closes the program if output file does not exist, for some reason
+    '''
     abs_path = create_folder()
     full_name = "%s/%s.txt" % (abs_path, process.get_file_name())
     total_mem = get_total_mem()
@@ -80,7 +136,18 @@ def mem_monitor(process):
     txt_file.close()
 
 def unix_to_windows(file_name):
-    '''Converts unix text file to be readable on window machines'''
+    '''Converts unix text file to be readable on window machines
+    
+    Args:
+        file_name (String): Gets the process name and start time from Process class.
+            Example: file_name = "Firefox 02/13/19 3:36"
+
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     print "Creating text file suitable for window machines..."
     output_folder_dir = create_folder()
     unix_text = format_string_to_unix(file_name)
@@ -88,7 +155,18 @@ def unix_to_windows(file_name):
     time.sleep(1)
 
 def format_string_to_unix(file_name):
-    '''Converts string ot be readable in unix'''
+    '''Converts string to be readable in unix
+    
+    Args:
+        file_name (String): Gets the process name and start time from Process class.
+            Example: file_name = "Firefox 02/13/19 3:36"
+    
+    Returns:
+        file_name (string): Returns the converted file_name that is suitable for windows"
+    
+    Raises:
+        None
+    '''
     count = 0
 
     for x in file_name:
@@ -100,7 +178,17 @@ def format_string_to_unix(file_name):
     return file_name
 
 def confirmation_page(process):
-    '''Displays all the information to user before recording memory'''
+    '''Displays all the information to user before recording memory
+    
+    Args:
+        process (Process class): Uses data from Process class
+
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     print "\nPlease confirm that the information is correct before continuing:"
     print "Process Name: %s" % process.process_name
     print "PID: %s" % process.pid_num
@@ -121,13 +209,36 @@ def confirmation_page(process):
             continue
 
 def end_message(execution_time):
-    '''Displays where the output files are saved at the end of the program'''
+    '''Displays where the output files are saved at the end of the program
+    
+    Args:
+        execution_time (time): How long the process monitor was running for.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    '''
     print "\nTotal runtime: %s" % time.strftime("%H hr, %M min, %S sec",
                                                 time.gmtime(execution_time))
     print "Program has finished executing. Files are located at %s\n" % create_folder()
 
 def check_number_of_processes(pid_list):
-    '''Lets users choose the process to record if the process has more than one ID'''
+    '''Lets users choose the process to record if the process has more than one ID
+    
+    Args:
+        pid_list (list of string): A string of PIDs (assuming there are multiple IDs)
+            Example: "283 274 18237 295817 4958". Want to convert this into a list so the user
+            can choose which PID to use.
+
+    Returns:
+        (1) pid_input: Returns PID that user has selected to use
+        (2) pid_list[0]: Return 0th index if there is only one process
+
+    Raises:
+        None
+    '''
     if len(pid_list) > 1:
         for x in pid_list:
             print x
@@ -137,7 +248,17 @@ def check_number_of_processes(pid_list):
         return pid_list[0]
 
 def convert_pid_to_list(pid):
-    '''Converts the process string into a list'''
+    '''Converts the process string into a list
+    
+    Args:
+        pid (string): A string of pids (assuming there are multiple IDs)
+
+    Returns:
+        pid_list (list of strings): Returns a list of PIDs (assuming there are multiple IDs)
+
+    Raises:
+        None
+    '''
     pid_str = ""
     pid_list = []
 
@@ -151,7 +272,17 @@ def convert_pid_to_list(pid):
     return pid_list
 
 def get_process_info():
-    '''Gets process information from user and initializes Process class'''
+    '''Gets process information from user and initializes Process class
+    
+    Args:
+        None
+
+    Returns:
+        process (process class): returns initialized process class
+
+    Raises:
+        None
+    '''
     pro_name = v.process_validation()
     pid_output = pro_name[1]
     pid_list = convert_pid_to_list(pid_output)
@@ -167,7 +298,17 @@ def get_process_info():
     return process
 
 def get_dependencies():
-    ''' Get a list of dependences that will be used in check_modules_exist()'''
+    ''' Get a list of dependencies.txt that will be used in check_modules_exist()
+    
+    Args:
+        None
+
+    Returns:
+        dep (list of string): Returns a list of dependences from dependencies.txt
+
+    Raises:
+        None
+    '''
     dep = []
     with open("dependencies.txt", "r") as txt:
         for lines in txt:
@@ -176,7 +317,18 @@ def get_dependencies():
     return dep
 
 def check_modules_exist():
-    '''Check if modules are installed. If not then plotting will not be done'''
+    '''Check if modules are installed. If not then plotting will not be done
+    
+    Args:
+        None
+
+    Returns:
+        True: if modules are installed
+        False: if modules are NOT installed
+
+    Raises:
+        None
+    '''
     list_mods = get_dependencies()
 
     for mods in list_mods:
