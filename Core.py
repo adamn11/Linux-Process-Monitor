@@ -1,6 +1,7 @@
 from Process import Process
 import version
 import Validations as v
+import Plot_data as plot
 
 import sys
 import os
@@ -183,7 +184,7 @@ def check_modules_exist():
             imp.find_module(mods)
         except ImportError as e:
             print e
-            print "Plotting will not execute since there is a module missing"
+            print "Plotting will not execute since there are missing modules"
             return False
     return True
 
