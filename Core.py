@@ -23,19 +23,23 @@ def create_folder():
 
 
 def show_eta(seconds_to_completion):
-    '''If program is not infinite, then show the date and time of when the program will finish running.'''
+    '''If program is not infinite, then show the date and time of when the
+    program will finish running.'''
     return datetime.now() + timedelta(seconds=seconds_to_completion)
 
 
 def get_total_mem():
-    '''Gets the total system RAM memory from /proc/meminfo. Only works on Linux machines'''
-    meminfo_output = subprocess.Popen('awk \'/MemTotal/ {print $2}\' /proc/meminfo', shell=True,
+    '''Gets the total system RAM memory from /proc/meminfo. Only works on
+    Linux machines'''
+    meminfo_output = subprocess.Popen('awk \'/MemTotal/ {print $2}\' '
+                                      '/proc/meminfo', shell=True,
                                       stdout=subprocess.PIPE, )
     return meminfo_output.stdout.read().strip()
 
 
 def calculate_process_memory_usage(proc_usage, total_memory):
-    '''Calculates memory in kb using process percentage and total memory of the system'''
+    '''Calculates memory in kb using process percentage and total memory of
+    the system'''
     try:
         if "\n" not in proc_usage:
             return round((((float(proc_usage) / 100) * int(total_memory))), 2)
@@ -54,29 +58,37 @@ def mem_monitor(proc):
     print "\n%s PID: %s" % (proc.process_name, proc.pid_num)
     print "Total Memory: %s kB" % total_mem
     if proc.stop_point == 0:
-        print "Program will run indefinitely until manual cancellation (Ctrl + C)"
+        print "Program will run indefinitely until manual cancellation " \
+              "(Ctrl + C)"
     else:    
         print "Program will finish at %s." % show_eta(int(proc.stop_point))
     print "Recording process...Press Ctrl+C at any time to stop monitoring."
 
     with open(full_name, "w") as txt_file:
         counter = 0
-        txt_file.write("Date        Time       MEM         Total        Percentage\n")
+        txt_file.write("Date        Time       MEM         Total        "
+                       "Percentage\n")
 
         try:
             while proc.stop_point == 0:
                 start = time.time()
-                top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (proc.pid_num, '10'),
-                                              shell=True, stdout=subprocess.PIPE, )
+                top_output = subprocess.Popen('top -b -n 1 | grep %s | '
+                                              'awk \'{print $%s}\'' %
+                                              (proc.pid_num, '10'),
+                                              shell=True,
+                                              stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
-                fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
+                fmt_current_date = "%s/%s/%s" % (current_date.month,
+                                                 current_date.day,
+                                                 current_date.year)
                 
-                txt_file.write("{} | {} | {} / {} kB | {} %\n".format(fmt_current_date, current_time,
-                                                                      calculate_process_memory_usage(mem_percent_output,
-                                                                                                     total_mem),
-                                                                      total_mem, mem_percent_output))
+                txt_file.write("{} | {} | {} / {} kB | {} %\n".
+                               format(fmt_current_date, current_time,
+                                      calculate_process_memory_usage
+                                      (mem_percent_output, total_mem),
+                                       total_mem, mem_percent_output))
                 txt_file.flush()
 
                 counter += float(proc.refresh_time)
@@ -94,8 +106,9 @@ def unix_to_windows(file_name):
     print "Creating text file suitable for window machines..."
     output_folder_dir = create_folder()
     unix_text = format_string_to_unix(file_name)
-    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text),
-                     shell=True)
+    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > 
+                     {0}/windowstxt.txt'''.format(output_folder_dir, unix_text)
+                     , shell=True)
     time.sleep(1)
 
 
@@ -138,11 +151,13 @@ def end_message(execution_time):
     '''Displays where the output files are saved at the end of the program'''
     print "\nTotal runtime: %s" % time.strftime("%H hr, %M min, %S sec",
                                                 time.gmtime(execution_time))
-    print "Program has finished executing. Files are located at %s\n" % create_folder()
+    print "Program has finished executing. Files are located at %s\n" % \
+          create_folder()
 
 
 def check_number_of_processes(pid_list):
-    '''Lets users choose the process to record if the process has more than one ID'''
+    '''Lets users choose the process to record if the process has more than
+    one ID'''
     if len(pid_list) > 1:
         for x in pid_list:
             print x
@@ -185,7 +200,8 @@ def get_process_info():
 
 
 def get_dependencies():
-    ''' Get a list of dependencies that will be used in check_modules_exist()'''
+    ''' Get a list of dependencies that will be used in check_modules_
+    exist()'''
     dep = []
     with open("dependencies.txt", "r") as txt:
         for lines in txt:

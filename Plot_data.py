@@ -47,12 +47,16 @@ def plot_data(process, execution_time, file_path):
     fig = plt.figure()
 
     ax = fig.add_subplot(111)
-    ax.set_title("%s Memory Monitor (Runtime: %s)" % (process.process_name, time.strftime("%H hr, %M min, %S sec",
+    ax.set_title("%s Memory Monitor (Runtime: %s)" % (process.process_name,
+                                                      time.strftime("%H hr, "
+                                                                    "%M min, "
+                                                                    "%S sec",
                  time.gmtime(execution_time))))
     ax.set_xlabel("Time (%s Second Intervals)" % process.refresh_time)
     ax.set_ylabel("Memory (in mb)")
     dates = matplotlib.dates.datestr2num(x)
-    ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter('%d/%m/%Y %H:%M:%S'))
+    ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter('%d/%m/%Y '
+                                                                '%H:%M:%S'))
     ax.plot_date(dates, y, ls='-', marker='o')
 
     fig.autofmt_xdate(rotation=45)
