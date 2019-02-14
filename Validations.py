@@ -6,13 +6,14 @@ def process_validation():
     while True:
         try:
             pro_name = raw_input("Enter process name: ")
-            pid_num = subprocess.check_output("pgrep %s" % pro_name,
-                                              shell=True)
+            pid_num = subprocess.check_output("pgrep %s" % pro_name, shell=True)
         except subprocess.CalledProcessError as e:
             print "Not a valid process"
+            print e
             continue 
         else:
-            return (pro_name, pid_num)
+            return pro_name, pid_num
+
 
 def refreshtime_validation():
     '''Validates that the Refresh Time stays within the bounds > 0'''
@@ -28,11 +29,13 @@ def refreshtime_validation():
         else:
             return runtime_input
 
+
 def stop_point_validation():
     '''Validates that the Stop Point stays within the bounds > 0'''
     while True:
         try:
-            stop_point_input = int(raw_input("Choose how long to run the program for (in seconds). Type 0 for manual cancelation: "))
+            stop_point_input = int(raw_input("Choose how long to run the program for (in seconds). Type 0 for manual "
+                                             "cancellation: "))
         except ValueError:
             print "\n**Please enter a valid number (Must be an integer).**\n"
             continue
@@ -42,7 +45,8 @@ def stop_point_validation():
         else:
             return stop_point_input
 
-def pid_input_validation(list):
+
+def pid_input_validation(proc_list):
     '''Validates that the user chooses a valid PID (Within the available PID)'''
     while True:
         try:
@@ -50,7 +54,7 @@ def pid_input_validation(list):
         except ValueError:
             print "Please enter a valid input (Select a PID)."
             continue
-        if str(pid_input) not in list:
+        if str(pid_input) not in proc_list:
             print "Please enter a valid input (Select a PID)."
             continue
         else:
