@@ -1,7 +1,7 @@
 import time
 
 
-def convert_to_excel(file_name, path):
+def convert_to_excel(path):
     '''Converts text file created from mem_monitor() to an excel sheet'''
     import xlwt
 
@@ -28,7 +28,7 @@ def convert_to_excel(file_name, path):
                 worksheet.write(item, i, value)
         i += 1
 
-    workbook.save(r'/%s/%s_monitor_output.xls' % (file_name, path))
+    workbook.save(r'/%s/monitor_output.xls' % path)
 
 
 def plot_data(process, execution_time, file_path):

@@ -106,9 +106,7 @@ def unix_to_windows(file_name):
     print "Creating text file suitable for window machines..."
     output_folder_dir = create_folder()
     unix_text = format_string_to_unix(file_name)
-    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > 
-                     {0}/windowstxt.txt'''.format(output_folder_dir, unix_text)
-                     , shell=True)
+    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text), shell=True)
     time.sleep(1)
 
 
@@ -237,7 +235,8 @@ if __name__ == "__main__":
     end_time = time.time() - start - 1
 
     if check_modules_exist():
-        Plot.convert_to_excel(process.get_file_name(), create_folder())
+        Plot.convert_to_excel(create_folder())
         Plot.plot_data(process, end_time, create_folder())
 
     end_message(end_time)
+    
