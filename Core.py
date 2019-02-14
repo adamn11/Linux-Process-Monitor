@@ -1,7 +1,7 @@
 from Process import Process
 import version
-import Validations as v
-import Plot_data as plot
+import Validations as Val
+import Plot_data as Plot
 
 import sys
 import os
@@ -87,8 +87,8 @@ def mem_monitor(proc):
                 txt_file.write("{} | {} | {} / {} kB | {} %\n".
                                format(fmt_current_date, current_time,
                                       calculate_process_memory_usage
-                                      (mem_percent_output, total_mem),
-                                       total_mem, mem_percent_output))
+                                      (mem_percent_output, total_mem)
+                                      , total_mem, mem_percent_output))
                 txt_file.flush()
 
                 counter += float(proc.refresh_time)
@@ -161,7 +161,7 @@ def check_number_of_processes(pid_list):
     if len(pid_list) > 1:
         for x in pid_list:
             print x
-        pid_input = v.pid_input_validation(pid_list)
+        pid_input = Val.pid_input_validation(pid_list)
         return pid_input
     else: 
         return pid_list[0]
@@ -184,14 +184,14 @@ def convert_pid_to_list(pid):
 
 def get_process_info():
     '''Gets process information from user and initializes Process class'''
-    pro_name = v.process_validation()
+    pro_name = Val.process_validation()
     pid_output = pro_name[1]
     pid_list = convert_pid_to_list(pid_output)
     pid_num = check_number_of_processes(pid_list)
 
     process_name = pro_name[0].strip()
-    refresh_time = v.refreshtime_validation()
-    stop_point = v.stop_point_validation()
+    refresh_time = Val.refreshtime_validation()
+    stop_point = Val.stop_point_validation()
 
     process = Process(process_name, refresh_time, stop_point,
                       pid_num, time.strftime("%m-%d-%Y %H:%M"))
@@ -237,8 +237,7 @@ if __name__ == "__main__":
     end_time = time.time() - start - 1
 
     if check_modules_exist():
-        plot.convert_to_excel(process.get_file_name(), create_folder())
-        plot.plot_data(process, end_time, create_folder())
+        Plot.convert_to_excel(process.get_file_name(), create_folder())
+        Plot.plot_data(process, end_time, create_folder())
 
     end_message(end_time)
-
