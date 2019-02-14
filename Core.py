@@ -21,14 +21,17 @@ def create_folder():
 
     return new_folder
 
+
 def show_eta(seconds_to_completion):
     '''If program is not infinite, then show the date and time of when the program will finish running.'''
     return datetime.now() + timedelta(seconds=seconds_to_completion)
+
 
 def get_total_mem():
     '''Gets the total system RAM memory from /proc/meminfo. Only works on Linux machines'''
     meminfo_output = subprocess.Popen('awk \'/MemTotal/ {print $2}\' /proc/meminfo', shell=True, stdout=subprocess.PIPE, )
     return meminfo_output.stdout.read().strip()
+
 
 def calculate_process_memory_usage(proc_usage, total_memory):
     '''Calculates memory in kb using process percentage and total memory of the system'''
@@ -39,6 +42,7 @@ def calculate_process_memory_usage(proc_usage, total_memory):
         print 'Application has been closed'
         print repr(e)
         sys.exit(1)
+
 
 def mem_monitor(process):
     '''Reads data from top command and records in text file'''
@@ -79,6 +83,7 @@ def mem_monitor(process):
             sys.exit(1)
     txt_file.close()
 
+
 def unix_to_windows(file_name):
     '''Converts unix text file to be readable on window machines'''
     print "Creating text file suitable for window machines..."
@@ -86,6 +91,7 @@ def unix_to_windows(file_name):
     unix_text = format_string_to_unix(file_name)
     subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text), shell=True)
     time.sleep(1)
+
 
 def format_string_to_unix(file_name):
     '''Converts string ot be readable in unix'''
@@ -98,6 +104,7 @@ def format_string_to_unix(file_name):
         count += 1
 
     return file_name
+
 
 def confirmation_page(process):
     '''Displays all the information to user before recording memory'''
@@ -120,11 +127,13 @@ def confirmation_page(process):
             print "\n**Please enter a valid response**\n"
             continue
 
+
 def end_message(execution_time):
     '''Displays where the output files are saved at the end of the program'''
     print "\nTotal runtime: %s" % time.strftime("%H hr, %M min, %S sec",
                                                 time.gmtime(execution_time))
     print "Program has finished executing. Files are located at %s\n" % create_folder()
+
 
 def check_number_of_processes(pid_list):
     '''Lets users choose the process to record if the process has more than one ID'''
@@ -135,6 +144,7 @@ def check_number_of_processes(pid_list):
         return pid_input
     else: 
         return pid_list[0]
+
 
 def convert_pid_to_list(pid):
     '''Converts the process string into a list'''
@@ -149,6 +159,7 @@ def convert_pid_to_list(pid):
         pid_str += x
 
     return pid_list
+
 
 def get_process_info():
     '''Gets process information from user and initializes Process class'''
@@ -166,6 +177,7 @@ def get_process_info():
 
     return process
 
+
 def get_dependencies():
     ''' Get a list of dependences that will be used in check_modules_exist()'''
     dep = []
@@ -174,6 +186,7 @@ def get_dependencies():
             dep.append(lines.partition(" ")[0])
 
     return dep
+
 
 def check_modules_exist():
     '''Check if modules are installed. If not then plotting will not be done'''
