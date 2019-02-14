@@ -29,7 +29,8 @@ def show_eta(seconds_to_completion):
 
 def get_total_mem():
     '''Gets the total system RAM memory from /proc/meminfo. Only works on Linux machines'''
-    meminfo_output = subprocess.Popen('awk \'/MemTotal/ {print $2}\' /proc/meminfo', shell=True, stdout=subprocess.PIPE, )
+    meminfo_output = subprocess.Popen('awk \'/MemTotal/ {print $2}\' /proc/meminfo', shell=True,
+                                      stdout=subprocess.PIPE, )
     return meminfo_output.stdout.read().strip()
 
 
@@ -44,18 +45,18 @@ def calculate_process_memory_usage(proc_usage, total_memory):
         sys.exit(1)
 
 
-def mem_monitor(process):
+def mem_monitor(proc):
     '''Reads data from top command and records in text file'''
     abs_path = create_folder()
-    full_name = "%s/%s.txt" % (abs_path, process.get_file_name())
+    full_name = "%s/%s.txt" % (abs_path, proc.get_file_name())
     total_mem = get_total_mem()
 
-    print "\n%s PID: %s" % (process.process_name, process.pid_num)
+    print "\n%s PID: %s" % (proc.process_name, proc.pid_num)
     print "Total Memory: %s kB" % total_mem
-    if process.stop_point == 0:
-        print "Program will run indefinitely until manual cancelation (Ctrl + C)" 
+    if proc.stop_point == 0:
+        print "Program will run indefinitely until manual cancellation (Ctrl + C)"
     else:    
-        print "Program will finish at %s." % show_eta(int(process.stop_point))
+        print "Program will finish at %s." % show_eta(int(proc.stop_point))
     print "Recording process...Press Ctrl+C at any time to stop monitoring."
 
     with open(full_name, "w") as txt_file:
@@ -63,19 +64,23 @@ def mem_monitor(process):
         txt_file.write("Date        Time       MEM         Total        Percentage\n")
 
         try:
-            while process.stop_point == 0:
+            while proc.stop_point == 0:
                 start = time.time()
-                top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (process.pid_num, '10'), shell=True, stdout=subprocess.PIPE, )
+                top_output = subprocess.Popen('top -b -n 1 | grep %s | awk \'{print $%s}\'' % (proc.pid_num, '10'),
+                                              shell=True, stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
                 fmt_current_date = "%s/%s/%s" % (current_date.month, current_date.day, current_date.year)
                 
-                txt_file.write("{} | {} | {} / {} kB | {} %\n".format(fmt_current_date, current_time, calculate_process_memory_usage(mem_percent_output, total_mem), total_mem, mem_percent_output))
+                txt_file.write("{} | {} | {} / {} kB | {} %\n".format(fmt_current_date, current_time,
+                                                                      calculate_process_memory_usage(mem_percent_output,
+                                                                                                     total_mem),
+                                                                      total_mem, mem_percent_output))
                 txt_file.flush()
 
-                counter += float(process.refresh_time)
-                time.sleep(float(process.refresh_time) - (time.time() - start))
+                counter += float(proc.refresh_time)
+                time.sleep(float(proc.refresh_time) - (time.time() - start))
         except KeyboardInterrupt:
             pass
         except IOError:
@@ -89,7 +94,8 @@ def unix_to_windows(file_name):
     print "Creating text file suitable for window machines..."
     output_folder_dir = create_folder()
     unix_text = format_string_to_unix(file_name)
-    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text), shell=True)
+    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text),
+                     shell=True)
     time.sleep(1)
 
 
@@ -106,16 +112,16 @@ def format_string_to_unix(file_name):
     return file_name
 
 
-def confirmation_page(process):
+def confirmation_page(proc):
     '''Displays all the information to user before recording memory'''
     print "\nPlease confirm that the information is correct before continuing:"
-    print "Process Name: %s" % process.process_name
-    print "PID: %s" % process.pid_num
-    print "Refresh Time: %s seconds" % process.refresh_time
-    if process.stop_point == 0:
-        print "Stop Point: Infinite (Manual Cancelation)"
+    print "Process Name: %s" % proc.process_name
+    print "PID: %s" % proc.pid_num
+    print "Refresh Time: %s seconds" % proc.refresh_time
+    if proc.stop_point == 0:
+        print "Stop Point: Infinite (Manual Cancellation)"
     else:
-        print "Stop Point: %d seconds" % process.stop_point
+        print "Stop Point: %d seconds" % proc.stop_point
 
     while True:
         user_continue = raw_input("Continue (Y/N)?: ")
@@ -179,7 +185,7 @@ def get_process_info():
 
 
 def get_dependencies():
-    ''' Get a list of dependences that will be used in check_modules_exist()'''
+    ''' Get a list of dependencies that will be used in check_modules_exist()'''
     dep = []
     with open("dependencies.txt", "r") as txt:
         for lines in txt:
@@ -212,11 +218,11 @@ if __name__ == "__main__":
     start = time.time()
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
-    execution_time = time.time() - start - 1
+    end_time = time.time() - start - 1
 
     if check_modules_exist():
         plot.convert_to_excel(process.get_file_name(), create_folder())
-        plot.plot_data(process, execution_time, create_folder())
+        plot.plot_data(process, end_time, create_folder())
 
-    end_message(execution_time)
+    end_message(end_time)
 
