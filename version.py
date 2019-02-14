@@ -20,5 +20,7 @@ v1.3.7     02/12/19 - !Added a check to see if dependencies are installed. Will 
                       plot if dependences are not installed.
 
 v1.3.8     02/13/19 - Fixed importing modules issue
+
+v1.3.9     02/14/19 - PEP8 code base
 '''
 
