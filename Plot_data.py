@@ -46,7 +46,8 @@ def plot_data(process, execution_time, file_path):
     
     Args:
         process (process class): Uses data from Process class
-        execution_time (time): How long the monitoring process will run for in seconds
+        execution_time (time): How long the monitoring process will run for in
+            seconds
         file_path (string): Output_file folder path
 
     Returns:

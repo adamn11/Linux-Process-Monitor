@@ -34,10 +34,12 @@ def create_folder():
     return new_folder
 
 def show_eta(seconds_to_completion):
-    '''If program is not infinite, then show the date and time of when the program will finish running.
+    '''If program is not infinite, then show the date and time of when the
+    program will finish running.
     
     Args:
-        seconds_to_completion (int): how many seconds the program will be running for
+        seconds_to_completion (int): how many seconds the program will be
+        running for
 
     Returns (String):
         Returns the time till completion
@@ -49,7 +51,8 @@ def show_eta(seconds_to_completion):
     return datetime.now() + timedelta(seconds=seconds_to_completion)
 
 def get_total_mem():
-    '''Gets the total system RAM memory from /proc/meminfo. Only works on Linux machines
+    '''Gets the total system RAM memory from /proc/meminfo. Only works on
+    Linux machines
 
     Args:
         None
@@ -65,10 +68,12 @@ def get_total_mem():
     return meminfo_output.stdout.read().strip()
 
 def calculate_process_memory_usage(proc_usage, total_memory):
-    '''Calculates memory in kb using process percentage and total memory of the system
+    '''Calculates memory in kb using process percentage and total memory of
+    the system
     
     Args:
-        proc_usage (String): Taken from top command used in linux. Process usage in percent
+        proc_usage (String): Taken from top command used in linux. Process
+            usage in percent
         total_memory (String): Taken from get_total_mem(). Total RAM mem
 
     Returns (Int):
@@ -95,8 +100,10 @@ def mem_monitor(process):
         None
 
     Raises:
-        KeyboardInterrupt: Ends monitoring process when Ctrl+C is pressed by the user
-        IOError: Closes the program if output file does not exist, for some reason
+        KeyboardInterrupt: Ends monitoring process when Ctrl+C is pressed by
+            the user
+        IOError: Closes the program if output file does not exist, for some
+            reason
     '''
     abs_path = create_folder()
     full_name = "%s/%s.txt" % (abs_path, process.get_file_name())
@@ -139,7 +146,8 @@ def unix_to_windows(file_name):
     '''Converts unix text file to be readable on window machines
     
     Args:
-        file_name (String): Gets the process name and start time from Process class.
+        file_name (String): Gets the process name and start time from Process
+            class.
             Example: file_name = "Firefox 02/13/19 3:36"
 
     Returns:
@@ -158,11 +166,13 @@ def format_string_to_unix(file_name):
     '''Converts string to be readable in unix
     
     Args:
-        file_name (String): Gets the process name and start time from Process class.
+        file_name (String): Gets the process name and start time from Process
+            class.
             Example: file_name = "Firefox 02/13/19 3:36"
     
     Returns:
-        file_name (string): Returns the converted file_name that is suitable for windows"
+        file_name (string): Returns the converted file_name that is suitable
+            for windows"
     
     Raises:
         None
@@ -225,12 +235,14 @@ def end_message(execution_time):
     print "Program has finished executing. Files are located at %s\n" % create_folder()
 
 def check_number_of_processes(pid_list):
-    '''Lets users choose the process to record if the process has more than one ID
+    '''Lets users choose the process to record if the process has more than
+    one ID
     
     Args:
-        pid_list (list of string): A string of PIDs (assuming there are multiple IDs)
-            Example: "283 274 18237 295817 4958". Want to convert this into a list so the user
-            can choose which PID to use.
+        pid_list (list of string): A string of PIDs (assuming there are
+            multiple IDs)
+            Example: "283 274 18237 295817 4958". Want to convert this into a
+                list so the user can choose which PID to use.
 
     Returns:
         (1) pid_input: Returns PID that user has selected to use
@@ -254,7 +266,8 @@ def convert_pid_to_list(pid):
         pid (string): A string of pids (assuming there are multiple IDs)
 
     Returns:
-        pid_list (list of strings): Returns a list of PIDs (assuming there are multiple IDs)
+        pid_list (list of strings): Returns a list of PIDs (assuming there are
+            multiple IDs)
 
     Raises:
         None
@@ -298,13 +311,15 @@ def get_process_info():
     return process
 
 def get_dependencies():
-    ''' Get a list of dependencies.txt that will be used in check_modules_exist()
+    ''' Get a list of dependencies.txt that will be used in
+    check_modules_exist()
     
     Args:
         None
 
     Returns:
-        dep (list of string): Returns a list of dependences from dependencies.txt
+        dep (list of string): Returns a list of dependencies from
+            dependencies.txt
 
     Raises:
         None
