@@ -271,10 +271,6 @@ if __name__ == "__main__":
         #Plot.convert_to_excel(process_folder_dir)
         Plot.plot_data(process, end_time, process_folder_dir)
 
-<<<<<<< HEAD
-    end_message(end_time)
-=======
     end_message(end_time, output_folder_dir)
 
     
->>>>>>> Can create output files folder and process subfolders
