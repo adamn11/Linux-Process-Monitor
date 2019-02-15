@@ -24,5 +24,7 @@ v1.3.8     02/13/19 - Fixed importing modules issue
 v1.3.9     02/14/19 - PEP8 code base
 
 v1.3.10    02/14/19 - Fixed issue from new line added into command line 
+
+v.1.4.10   02/15/19 - !Creates individual folders for each process
 '''
 
