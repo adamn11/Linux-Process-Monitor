@@ -11,15 +11,36 @@ import imp
 from datetime import datetime, timedelta
 
 
-def create_folder():
-    '''Creates a folder that stores the output files of the program'''
+def create_folder(folder_name):
+    ''' Creates a folder within the root directory '''
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    new_folder = os.path.join(current_dir, 'Output_Files')
+    path = os.path.join(current_dir, folder_name)
 
-    if not os.path.exists(new_folder):
-        os.makedirs(new_folder)
+    if os.path.exists(path) == False:
+        os.makedirs(path)
+    else:
+        print "Folder already exists"
 
-    return new_folder
+
+def create_subfolder(parent_folder, subfolder):
+    ''' Creates a subfolder within the parent folder '''
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(current_dir, parent_folder, subfolder)
+
+    if os.path.exists(path) == False:
+        os.makedirs(path)
+    else:
+        print "Subfolder already exists"
+
+
+def get_directory(folder = None):
+    ''' Returns the path of the root directory where the program is located '''
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+
+
+
+    # Return root directory
+    return current_dir
 
 
 def show_eta(seconds_to_completion):
@@ -51,8 +72,12 @@ def calculate_process_memory_usage(proc_usage, total_memory):
 
 def mem_monitor(proc):
     '''Reads data from top command and records in text file'''
-    abs_path = create_folder()
-    full_name = "%s/%s.txt" % (abs_path, proc.get_file_name())
+    #abs_path = get_directory()
+    file_name = process.get_file_name()
+    create_subfolder("Output_Files", file_name)
+    full_name = get_directory("Output_Files/%s" % file_name)
+    print full_name 
+    sys.exit(1)
     total_mem = get_total_mem()
 
     print "\n%s PID: %s" % (proc.process_name, proc.pid_num)
@@ -104,7 +129,7 @@ def mem_monitor(proc):
 def unix_to_windows(file_name):
     '''Converts unix text file to be readable on window machines'''
     print "Creating text file suitable for window machines..."
-    output_folder_dir = create_folder()
+    output_folder_dir = get_directory()
     unix_text = format_string_to_unix(file_name)
     subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(output_folder_dir, unix_text), shell=True)
     time.sleep(1)
@@ -150,7 +175,7 @@ def end_message(execution_time):
     print "\nTotal runtime: %s" % time.strftime("%H hr, %M min, %S sec",
                                                 time.gmtime(execution_time))
     print "Program has finished executing. Files are located at %s\n" % \
-          create_folder()
+          get_directory()
 
 
 def check_number_of_processes(pid_list):
@@ -224,19 +249,28 @@ def check_modules_exist():
 
 if __name__ == "__main__":
     '''Main function'''
+    output_files_name = "Output_Files"
 
+    create_folder(output_files_name)
+    create_subfolder(output_files_name, "sub")
+
+    '''
     print "Process Monitor: %s" % version.__version__ 
     process = get_process_info()
     confirmation_page(process)
 
     start = time.time()
+    if get_directory(output_files_name) == False:
+        create_folder(output_files_name)
     mem_monitor(process)
     unix_to_windows(process.get_file_name())
     end_time = time.time() - start - 1
 
     if check_modules_exist():
-        Plot.convert_to_excel(create_folder())
-        Plot.plot_data(process, end_time, create_folder())
+        Plot.convert_to_excel(get_directory())
+        Plot.plot_data(process, end_time, get_directory())
 
     end_message(end_time)
+    '''
+
     
