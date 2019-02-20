@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 __version__ = "v1.3.12dev"
-=======
-__version__ = "v1.4.10dev"
->>>>>>> 70e6102d1a3ccbe6a4524944f1aacbb9a03c918b
 
 '''
 v1.0.0     12/04/18 - Working version of program 
