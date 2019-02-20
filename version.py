@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 __version__ = "v1.3.12dev"
+=======
+__version__ = "v1.4.10dev"
+>>>>>>> 70e6102d1a3ccbe6a4524944f1aacbb9a03c918b
 
 '''
 v1.0.0     12/04/18 - Working version of program 
@@ -25,9 +29,13 @@ v1.3.9     02/14/19 - PEP8 code base
 
 v1.3.10    02/14/19 - Fixed issue from new line added into command line 
 
+<<<<<<< HEAD
 v1.3.11    02/20/19 - Use getters in Process.py instead of pulling variable directly
 
 v1.3.12    02/20/19 - Fixed '/bin/sh: 1: Syntax error: "(" unexpected' error
 
+=======
+v.1.4.10   02/15/19 - !Creates individual folders for each process
+>>>>>>> 70e6102d1a3ccbe6a4524944f1aacbb9a03c918b
 '''
 

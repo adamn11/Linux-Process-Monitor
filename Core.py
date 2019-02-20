@@ -131,9 +131,13 @@ def unix_to_windows(file_name, process_folder):
     '''Converts unix text file to be readable on window machines'''
     print "\nCreating text file suitable for window machines..."
     unix_text = format_string_to_unix(file_name)
+<<<<<<< HEAD
     unix_process_folder = format_string_to_unix(process_folder)
     subprocess.Popen('awk \'sub("$", "\\r")\' {0}/{1}.txt > {0}/windowstxt.txt'.
                      format(unix_process_folder, unix_text), shell=True)
+=======
+    subprocess.Popen('''awk 'sub("$", "\\r")' {0}/{1}.txt > {0}/windowstxt.txt'''.format(process_folder, unix_text), shell=True)
+>>>>>>> 70e6102d1a3ccbe6a4524944f1aacbb9a03c918b
     time.sleep(1)
 
 
