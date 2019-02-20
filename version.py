@@ -1,4 +1,4 @@
-__version__ = "v1.3.10dev"
+__version__ = "v1.3.11dev"
 
 '''
 v1.0.0     12/04/18 - Working version of program 
@@ -24,5 +24,7 @@ v1.3.8     02/13/19 - Fixed importing modules issue
 v1.3.9     02/14/19 - PEP8 code base
 
 v1.3.10    02/14/19 - Fixed issue from new line added into command line 
+
+v1.3.11    02/20/19 - Use getters in Process.py instead of pulling variable directly
 '''
 
