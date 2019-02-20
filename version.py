@@ -1,4 +1,4 @@
-__version__ = "v1.3.12dev"
+__version__ = "v1.3.12"
 
 '''
 v1.0.0     12/04/18 - Working version of program 
