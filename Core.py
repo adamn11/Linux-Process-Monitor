@@ -55,13 +55,13 @@ def mem_monitor(proc):
     full_name = "%s/%s.txt" % (abs_path, proc.get_file_name())
     total_mem = get_total_mem()
 
-    print "\n%s PID: %s" % (proc.process_name, proc.pid_num)
+    print "\n%s PID: %s" % (proc.get_process_name(), proc.get_pid_num())
     print "Total Memory: %s kB" % total_mem
-    if proc.stop_point == 0:
+    if proc.get_stop_point() == 0:
         print "Program will run indefinitely until manual cancellation " \
               "(Ctrl + C)"
     else:    
-        print "Program will finish at %s." % show_eta(int(proc.stop_point))
+        print "Program will finish at %s." % show_eta(int(proc.get_stop_point()))
     print "Recording process...Press Ctrl+C at any time to stop monitoring."
 
     with open(full_name, "w") as txt_file:
@@ -70,11 +70,11 @@ def mem_monitor(proc):
                        "Percentage\n")
 
         try:
-            while proc.stop_point == 0:
+            while proc.get_stop_point() == 0:
                 start = time.time()
                 top_output = subprocess.Popen('top -b -n 1 | grep %s | '
                                               'awk \'{print $%s}\'' %
-                                              (proc.pid_num, '10'),
+                                              (proc.get_pid_num(), '10'),
                                               shell=True,
                                               stdout=subprocess.PIPE, )
                 mem_percent_output = top_output.stdout.read().strip()
@@ -91,8 +91,8 @@ def mem_monitor(proc):
                                       , total_mem, mem_percent_output))
                 txt_file.flush()
 
-                counter += float(proc.refresh_time)
-                time.sleep(float(proc.refresh_time) - (time.time() - start))
+                counter += float(proc.get_refresh_time())
+                time.sleep(float(proc.get_refresh_time()) - (time.time() - start))
         except KeyboardInterrupt:
             pass
         except IOError:
@@ -129,10 +129,10 @@ def confirmation_page(proc):
     print "Process Name: %s" % proc.process_name
     print "PID: %s" % proc.pid_num
     print "Refresh Time: %s seconds" % proc.refresh_time
-    if proc.stop_point == 0:
+    if proc.get_stop_point() == 0:
         print "Stop Point: Infinite (Manual Cancellation)"
     else:
-        print "Stop Point: %d seconds" % proc.stop_point
+        print "Stop Point: %d seconds" % proc.get_stop_point()
 
     while True:
         user_continue = raw_input("Continue (Y/N)?: ")
