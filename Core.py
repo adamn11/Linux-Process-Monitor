@@ -239,4 +239,3 @@ if __name__ == "__main__":
         Plot.plot_data(process, end_time, create_folder())
 
     end_message(end_time)
-    
