@@ -253,6 +253,7 @@ if __name__ == "__main__":
     '''Main function'''
     output_files_name = "Output_Files"
     output_folder_dir = ""
+
     if get_directory(output_files_name) is False:
         create_folder(output_files_name)
     else:
@@ -275,5 +276,3 @@ if __name__ == "__main__":
         Plot.plot_data(process, end_time, process_folder_dir)
 
     end_message(end_time, output_folder_dir)
-
-    
