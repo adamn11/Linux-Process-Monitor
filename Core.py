@@ -16,7 +16,7 @@ def create_folder(folder_name):
     current_dir = os.path.dirname(os.path.realpath(__file__))
     path = os.path.join(current_dir, folder_name)
 
-    if os.path.exists(path) == False:
+    if os.path.exists(path) is False:
         os.makedirs(path)
     else:
         print "Folder already exists"
@@ -27,7 +27,7 @@ def create_subfolder(parent_folder, subfolder):
     current_dir = os.path.dirname(os.path.realpath(__file__))
     path = os.path.join(current_dir, parent_folder, subfolder)
 
-    if os.path.exists(path) == False:
+    if os.path.exists(path) is False:
         os.makedirs(path)
     else:
         print "Subfolder already exists"
@@ -76,8 +76,6 @@ def calculate_process_memory_usage(proc_usage, total_memory):
 
 def mem_monitor(proc, process_folder):
     '''Reads data from top command and records in text file'''
-    #create_subfolder("Output_Files", process.get_file_name())
-    #process_folder_dir = get_directory(process.get_file_name(), "Output_Files")
     text_file = "%s/%s.txt" % (process_folder, process.get_file_name())
     total_mem = get_total_mem()
 
@@ -87,7 +85,8 @@ def mem_monitor(proc, process_folder):
         print "Program will run indefinitely until manual cancellation " \
               "(Ctrl + C)"
     else:    
-        print "Program will finish at %s." % show_eta(int(proc.get_stop_point()))
+        print "Program will finish at %s." % \
+              show_eta(int(proc.get_stop_point()))
     print "Recording process...Press Ctrl+C at any time to stop monitoring."
 
     with open(text_file, "w") as txt_file:
@@ -118,7 +117,8 @@ def mem_monitor(proc, process_folder):
                 txt_file.flush()
 
                 counter += float(proc.get_refresh_time())
-                time.sleep(float(proc.get_refresh_time()) - (time.time() - start))
+                time.sleep(float(proc.get_refresh_time()) - (time.time() -
+                                                             start))
         except KeyboardInterrupt:
             pass
         except IOError:
@@ -132,8 +132,8 @@ def unix_to_windows(file_name, process_folder):
     print "\nCreating text file suitable for window machines..."
     unix_text = format_string_to_unix(file_name)
     unix_process_folder = format_string_to_unix(process_folder)
-    subprocess.Popen('awk \'sub("$", "\\r")\' {0}/{1}.txt > {0}/windowstxt.txt'.
-                     format(unix_process_folder, unix_text), shell=True)
+    subprocess.Popen('awk \'sub("$", "\\r")\' {0}/{1}.txt > {0}/windowstxt.txt'
+                     .format(unix_process_folder, unix_text), shell=True)
     time.sleep(1)
 
 
@@ -252,8 +252,10 @@ def check_modules_exist():
 if __name__ == "__main__":
     '''Main function'''
     output_files_name = "Output_Files"
-    if get_directory(output_files_name) == False:
-        output_folder_dir = create_folder(output_files_name)
+    output_folder_dir = ""
+
+    if get_directory(output_files_name) is False:
+        create_folder(output_files_name)
     else:
         output_folder_dir = get_directory(output_files_name)
 
@@ -270,9 +272,7 @@ if __name__ == "__main__":
     end_time = time.time() - start - 1
 
     if check_modules_exist():
-        #Plot.convert_to_excel(process_folder_dir)
+        Plot.convert_to_excel(process_folder_dir)
         Plot.plot_data(process, end_time, process_folder_dir)
 
     end_message(end_time, output_folder_dir)
-
-    
