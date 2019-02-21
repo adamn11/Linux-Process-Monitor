@@ -8,6 +8,7 @@ import os
 import subprocess
 import time
 import imp
+import logging
 from datetime import datetime, timedelta
 
 
@@ -69,6 +70,7 @@ def calculate_process_memory_usage(proc_usage, total_memory):
         if "\n" not in proc_usage:
             return round((((float(proc_usage) / 100) * int(total_memory))), 2)
     except ValueError as e:
+        # TODO: Log error
         print 'Application has been closed'
         print repr(e)
         sys.exit(1)
@@ -153,9 +155,9 @@ def format_string_to_unix(file_name):
 def confirmation_page(proc):
     '''Displays all the information to user before recording memory'''
     print "\nPlease confirm that the information is correct before continuing:"
-    print "Process Name: %s" % proc.process_name
-    print "PID: %s" % proc.pid_num
-    print "Refresh Time: %s seconds" % proc.refresh_time
+    print "Process Name: %s" % proc.get_process_name()
+    print "PID: %s" % proc.get_pid_num()
+    print "Refresh Time: %s seconds" % proc.get_refresh_time()
     if proc.get_stop_point() == 0:
         print "Stop Point: Infinite (Manual Cancellation)"
     else:
@@ -184,10 +186,10 @@ def check_number_of_processes(pid_list):
     '''Lets users choose the process to record if the process has more than
     one ID'''
     if len(pid_list) > 1:
-        for x in pid_list:
+        for x in pid_lisproc
             print x
-        pid_input = Val.pid_input_validation(pid_list)
-        return pid_input
+        pid_input = Val.proc
+        return pid_inputproc
     else: 
         return pid_list[0]
 
@@ -243,6 +245,7 @@ def check_modules_exist():
         try:
             imp.find_module(mods)
         except ImportError as e:
+            # TODO: Log error
             print e
             print "Plotting will not execute since there are missing modules"
             return False
