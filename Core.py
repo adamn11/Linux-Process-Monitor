@@ -8,6 +8,7 @@ import os
 import subprocess
 import time
 import imp
+import logging
 from datetime import datetime, timedelta
 
 
@@ -18,8 +19,12 @@ def create_folder(folder_name):
 
     if os.path.exists(path) is False:
         os.makedirs(path)
+        logging.info('%s folder has been created' % folder_name)
     else:
+        logging.error('%s folder already exists' % folder_name)
         print "Folder already exists"
+
+    return path
 
 
 def create_subfolder(parent_folder, subfolder):
@@ -29,7 +34,9 @@ def create_subfolder(parent_folder, subfolder):
 
     if os.path.exists(path) is False:
         os.makedirs(path)
+        logging.info('%s folder has been created' % subfolder)
     else:
+        logging.error('%s folder already exists' % subfolder)
         print "Subfolder already exists"
 
 
@@ -69,8 +76,8 @@ def calculate_process_memory_usage(proc_usage, total_memory):
         if "\n" not in proc_usage:
             return round((((float(proc_usage) / 100) * int(total_memory))), 2)
     except ValueError as e:
-        print 'Application has been closed'
         print repr(e)
+        logging.error(e)
         sys.exit(1)
 
 
@@ -89,6 +96,7 @@ def mem_monitor(proc, process_folder):
               show_eta(int(proc.get_stop_point()))
     print "Recording process...Press Ctrl+C at any time to stop monitoring."
 
+    logging.info('Monitoring process has started')
     with open(text_file, "w") as txt_file:
         counter = 0
         txt_file.write("Date        Time       MEM         Total        "
@@ -120,8 +128,10 @@ def mem_monitor(proc, process_folder):
                 time.sleep(float(proc.get_refresh_time()) - (time.time() -
                                                              start))
         except KeyboardInterrupt:
+            logging.info('Monitoring process has ended')
             pass
         except IOError:
+            logging.error('File does not exist')
             print "The file does not exist"
             sys.exit(1)
     txt_file.close()
@@ -130,6 +140,8 @@ def mem_monitor(proc, process_folder):
 def unix_to_windows(file_name, process_folder):
     '''Converts unix text file to be readable on window machines'''
     print "\nCreating text file suitable for window machines..."
+    logging.info('A windows compatible text file has been created')
+    
     unix_text = format_string_to_unix(file_name)
     unix_process_folder = format_string_to_unix(process_folder)
     subprocess.Popen('awk \'sub("$", "\\r")\' {0}/{1}.txt > {0}/windowstxt.txt'
@@ -153,9 +165,9 @@ def format_string_to_unix(file_name):
 def confirmation_page(proc):
     '''Displays all the information to user before recording memory'''
     print "\nPlease confirm that the information is correct before continuing:"
-    print "Process Name: %s" % proc.process_name
-    print "PID: %s" % proc.pid_num
-    print "Refresh Time: %s seconds" % proc.refresh_time
+    print "Process Name: %s" % proc.get_process_name()
+    print "PID: %s" % proc.get_pid_num()
+    print "Refresh Time: %s seconds" % proc.get_refresh_time()
     if proc.get_stop_point() == 0:
         print "Stop Point: Infinite (Manual Cancellation)"
     else:
@@ -171,6 +183,14 @@ def confirmation_page(proc):
             print "\n**Please enter a valid response**\n"
             continue
 
+    logging.info('Process Name: %s' % proc.get_process_name())
+    logging.info('PID: %s' % proc.get_pid_num())
+    logging.info('Refresh Time: %s' % proc.get_refresh_time())
+    if proc.get_stop_point() == 0:
+        logging.info('Stop Point: Infinite')
+    else:
+        logging.info('Stop Point: %s' % proc.get_stop_point())
+
 
 def end_message(execution_time, output_folder_location):
     '''Displays where the output files are saved at the end of the program'''
@@ -178,16 +198,21 @@ def end_message(execution_time, output_folder_location):
                                                 time.gmtime(execution_time))
     print "Program has finished executing. Files are located at %s\n" % \
           output_folder_location
+    logging.info('Execution Time: %s seconds' % execution_time)
+    logging.info('Output Folder Location: %s' % output_folder_location)
+    logging.info('Program has ended')
 
 
 def check_number_of_processes(pid_list):
     '''Lets users choose the process to record if the process has more than
     one ID'''
+    logging.info('Number of processes found: %s' % len(pid_list))
+
     if len(pid_list) > 1:
-        for x in pid_list:
+        for x in pid_lisproc
             print x
-        pid_input = Val.pid_input_validation(pid_list)
-        return pid_input
+        pid_input = Val.proc
+        return pid_inputproc
     else: 
         return pid_list[0]
 
@@ -243,19 +268,25 @@ def check_modules_exist():
         try:
             imp.find_module(mods)
         except ImportError as e:
+            # TODO: Log error
             print e
+            logging.error('%s' % e)
             print "Plotting will not execute since there are missing modules"
+            logging.error('Plotting will not execute since there are missing modules')
             return False
     return True
 
 
 if __name__ == "__main__":
     '''Main function'''
+    logging.basicConfig(filename='monitor.log', level=logging.INFO, 
+                        filemode='a', 
+                        format='%(asctime)s - [%(levelname)s] - %(message)s')
+
     output_files_name = "Output_Files"
-    output_folder_dir = ""
 
     if get_directory(output_files_name) is False:
-        create_folder(output_files_name)
+        output_folder_dir = create_folder(output_files_name)
     else:
         output_folder_dir = get_directory(output_files_name)
 
@@ -276,3 +307,4 @@ if __name__ == "__main__":
         Plot.plot_data(process, end_time, process_folder_dir)
 
     end_message(end_time, output_folder_dir)
+    logging.info('')    # Easier to differentiate between processes in log

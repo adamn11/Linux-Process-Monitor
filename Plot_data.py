@@ -1,4 +1,5 @@
 import time
+import logging
 
 
 def convert_to_excel(path):
@@ -6,6 +7,7 @@ def convert_to_excel(path):
     import xlwt
 
     print "Formatting text file to excel..."
+    logging.info("Formatting text file to an excel file")
     style = xlwt.XFStyle()
     style.num_format_str = "#,###0.00"
     f = open(r"%s/windowstxt.txt" % path, 'r+')
@@ -37,6 +39,7 @@ def plot_data(process, execution_time, file_path):
     import matplotlib.pyplot as plt
 
     print "Plotting data..."
+    logging.info('Plotting data')
 
     with open("%s/%s.txt" % (file_path, process.get_file_name())) as t:
         data = t.readlines()[1:]
@@ -71,5 +74,5 @@ def is_number(s):
     try:
         float(s)
         return True
-    except ValueError:
+    except ValueError as v:
         return False
