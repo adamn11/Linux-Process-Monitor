@@ -18,8 +18,7 @@ v1.1.7     02/08/19 - !Renamed Main.py to Core.py
 v1.2.7     02/11/19 - !Moved plotting methods to separate file
 
 v1.3.7     02/12/19 - !Added a check to see if dependencies are installed. Will
-                        not
-                      plot if dependencies are not installed.
+                        not plot if dependencies are not installed.
 
 v1.3.8     02/13/19 - Fixed importing modules issue
 
