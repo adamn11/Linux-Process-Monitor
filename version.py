@@ -35,6 +35,6 @@ v1.3.13    02/21/19 - Cleaned code
 
 v1.4.13    02/22/19 - !Added logging to program
 
-v1.4.14    
+v1.4.14    02/22/19 - Moved monitoring process to a separate file
 
 '''
