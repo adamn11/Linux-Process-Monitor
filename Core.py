@@ -152,7 +152,8 @@ def check_modules_exist():
             print e
             logging.error('%s' % e)
             print "Plotting will not execute since there are missing modules"
-            logging.error('Plotting will not execute since there are missing modules')
+            logging.error('Plotting will not execute since there are missing '
+                          'modules')
             return False
     return True
 
