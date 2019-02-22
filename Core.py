@@ -10,7 +10,6 @@ import subprocess
 import time
 import imp
 import logging
-from datetime import datetime, timedelta
 
 
 def create_folder(folder_name):
@@ -55,31 +54,6 @@ def get_directory(folder_name, parent_folder = None):
     return False
 
 
-def unix_to_windows(file_name, process_folder):
-    '''Converts unix text file to be readable on window machines'''
-    print "\nCreating text file suitable for window machines..."
-    logging.info('A windows compatible text file has been created')
-    
-    unix_text = format_string_to_unix(file_name)
-    unix_process_folder = format_string_to_unix(process_folder)
-    subprocess.Popen('awk \'sub("$", "\\r")\' {0}/{1}.txt > {0}/windowstxt.txt'
-                     .format(unix_process_folder, unix_text), shell=True)
-    time.sleep(1)
-
-
-def format_string_to_unix(file_name):
-    '''Converts string ot be readable in unix'''
-    count = 0
-
-    for x in file_name:
-        if x == " " or x == "(" or x == ")" or x == ":":
-            file_name = file_name[:count] + "\\" + file_name[count:]
-            count += 1
-        count += 1
-
-    return file_name
-
-
 def confirmation_page(proc):
     '''Displays all the information to user before recording memory'''
     print "\nPlease confirm that the information is correct before continuing:"
@@ -108,17 +82,6 @@ def confirmation_page(proc):
         logging.info('Stop Point: Infinite')
     else:
         logging.info('Stop Point: %s' % proc.get_stop_point())
-
-
-def end_message(execution_time, output_folder_location):
-    '''Displays where the output files are saved at the end of the program'''
-    print "\nTotal runtime: %s" % time.strftime("%H hr, %M min, %S sec",
-                                                time.gmtime(execution_time))
-    print "Program has finished executing. Files are located at %s\n" % \
-          output_folder_location
-    logging.info('Execution Time: %s seconds' % execution_time)
-    logging.info('Output Folder Location: %s' % output_folder_location)
-    logging.info('Program has ended')
 
 
 def check_number_of_processes(pid_list):
@@ -186,13 +149,48 @@ def check_modules_exist():
         try:
             imp.find_module(mods)
         except ImportError as e:
-            # TODO: Log error
             print e
             logging.error('%s' % e)
             print "Plotting will not execute since there are missing modules"
             logging.error('Plotting will not execute since there are missing modules')
             return False
     return True
+
+
+def unix_to_windows(file_name, process_folder):
+    '''Converts unix text file to be readable on window machines'''
+    print "\nCreating text file suitable for window machines..."
+    logging.info('A windows compatible text file has been created')
+    
+    unix_text = format_string_to_unix(file_name)
+    unix_process_folder = format_string_to_unix(process_folder)
+    subprocess.Popen('awk \'sub("$", "\\r")\' {0}/{1}.txt > {0}/windowstxt.txt'
+                     .format(unix_process_folder, unix_text), shell=True)
+    time.sleep(1)
+
+
+def format_string_to_unix(file_name):
+    '''Converts string to be readable in unix'''
+    count = 0
+
+    for x in file_name:
+        if x == " " or x == "(" or x == ")" or x == ":":
+            file_name = file_name[:count] + "\\" + file_name[count:]
+            count += 1
+        count += 1
+
+    return file_name
+
+
+def end_message(execution_time, output_folder_location):
+    '''Displays where the output files are saved at the end of the program'''
+    print "\nTotal runtime: %s" % time.strftime("%H hr, %M min, %S sec",
+                                                time.gmtime(execution_time))
+    print "Program has finished executing. Files are located at %s\n" % \
+          output_folder_location
+    logging.info('Execution Time: %s seconds' % execution_time)
+    logging.info('Output Folder Location: %s' % output_folder_location)
+    logging.info('Program has ended')
 
 
 if __name__ == "__main__":
