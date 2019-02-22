@@ -1,4 +1,5 @@
 import subprocess
+import logging
 
 
 def process_validation():
@@ -9,6 +10,7 @@ def process_validation():
             pid_num = subprocess.check_output("pgrep %s" % pro_name,
                                               shell=True)
         except subprocess.CalledProcessError as e:
+            logging.error(e)
             print "Not a valid process"
             print e
             continue 
