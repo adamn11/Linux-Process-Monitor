@@ -1,12 +1,15 @@
 from Process import Process
 
-import os
+import sys
+import logging
 import subprocess
+import time
+from datetime import datetime, timedelta
 
 
 def mem_monitor(proc, process_folder):
     '''Reads data from top command and records in text file'''
-    text_file = "%s/%s.txt" % (process_folder, process.get_file_name())
+    text_file = "%s/%s.txt" % (process_folder, proc.get_file_name())
     total_mem = get_total_mem()
 
     print "\n%s PID: %s" % (proc.get_process_name(), proc.get_pid_num())
@@ -67,3 +70,21 @@ def get_total_mem():
                                       '/proc/meminfo', shell=True,
                                       stdout=subprocess.PIPE, )
     return meminfo_output.stdout.read().strip()
+
+
+def calculate_process_memory_usage(proc_usage, total_memory):
+    '''Calculates memory in kb using process percentage and total memory of
+    the system'''
+    try:
+        if "\n" not in proc_usage:
+            return round((((float(proc_usage) / 100) * int(total_memory))), 2)
+    except ValueError as e:
+        print repr(e)
+        logging.error(e)
+        sys.exit(1)
+
+
+def show_eta(seconds_to_completion):
+    '''If program is not infinite, then show the date and time of when the
+    program will finish running.'''
+    return datetime.now() + timedelta(seconds=seconds_to_completion)
