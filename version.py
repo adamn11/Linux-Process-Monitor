@@ -1,4 +1,4 @@
-__version__ = "v1.3.13dev"
+__version__ = "v1.4.13dev"
 
 '''
 v1.0.0     12/04/18 - Working version of program 
@@ -33,5 +33,7 @@ v1.3.11    02/20/19 - Use getters in Process.py instead of pulling variable
 v1.3.12    02/20/19 - Fixed '/bin/sh: 1: Syntax error: "(" unexpected' error
 
 v1.3.13    02/21/19 - Cleaned code
+
+v1.4.13    02/22/19 - !Added logging to program
 
 '''
