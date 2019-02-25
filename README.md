@@ -17,7 +17,7 @@ The following packages are optional. The program will still run without these in
 
 ### Installing Program
 
-- Clone this repo to your local machine using
+Clone this repo to your local machine using
 
 ```
 git clone https://github.com/adamn11/Linux-Process-Monitor.git
