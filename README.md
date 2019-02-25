@@ -2,6 +2,12 @@
 
 A simple command line application that monitors process memory.
 
+## Features
+
+- Monitors a process's memory usage 
+- Graphs data into a png once monitoring process is done
+- Converts text data into an excel file
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
