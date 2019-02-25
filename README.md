@@ -37,7 +37,7 @@ sudo apt-get install xlwt
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning
+We use [SemVer](http://semver.org/) for versioning. To view the version history, look at version.py.
 
 ## Authors
 
