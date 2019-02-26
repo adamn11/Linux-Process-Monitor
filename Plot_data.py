@@ -60,7 +60,7 @@ def plot_data(process, execution_time, file_path):
     dates = matplotlib.dates.datestr2num(x)
     ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter('%d/%m/%Y '
                                                                 '%H:%M:%S'))
-    ax.plot_date(dates, y, ls='-', marker='o')
+    ax.plot_date(dates, y, ls='-', marker='.')
 
     fig.autofmt_xdate(rotation=45)
     fig.tight_layout()
