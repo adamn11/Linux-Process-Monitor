@@ -1,4 +1,4 @@
-__version__ = "v1.4.1dev"
+__version__ = "v1.4.2dev"
 
 '''
 v1.0.0     12/04/18 - Working version of program 
@@ -36,5 +36,7 @@ v1.3.6     02/21/19 - Cleaned code
 v1.4.0     02/22/19 - !Added logging to program
 
 v1.4.1     02/22/19 - Moved monitoring process to a separate file
+
+v1.4.2     02/26/19 - Fixed grepping issue
 
 '''

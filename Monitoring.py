@@ -31,23 +31,20 @@ def mem_monitor(proc, process_folder):
         try:
             while proc.get_stop_point() == 0:
                 start = time.time()
-                top_output = subprocess.Popen('top -b -n 1 | grep %s | '
-                                              'awk \'{print $%s}\'' %
-                                              (proc.get_pid_num(), '10'),
-                                              shell=True,
-                                              stdout=subprocess.PIPE, )
-                mem_percent_output = top_output.stdout.read().strip()
+                mem_percent_output = get_mem_percent_output(proc.get_process_name())
+
                 current_time = time.strftime("%H:%M:%S")
                 current_date = datetime.now() 
                 fmt_current_date = "%s/%s/%s" % (current_date.month,
                                                  current_date.day,
                                                  current_date.year)
-                
+
                 txt_file.write("{} | {} | {} / {} kB | {} %\n".
                                format(fmt_current_date, current_time,
                                       calculate_process_memory_usage
                                       (mem_percent_output, total_mem)
                                       , total_mem, mem_percent_output))
+
                 txt_file.flush()
 
                 counter += float(proc.get_refresh_time())
@@ -63,6 +60,21 @@ def mem_monitor(proc, process_folder):
     txt_file.close()
 
 
+def get_mem_percent_output(proc_name):
+    top_output = subprocess.Popen('top -b -n 1 | grep %s | '
+                                  'awk \'{print $%s}\'' %
+                                  (proc_name, '10'),
+                                  shell=True,
+                                  stdout=subprocess.PIPE, )
+    mem_percent_output = top_output.stdout.read().strip()
+
+    if "\\n" in repr(mem_percent_output):
+        i = repr(mem_percent_output).index('n')
+        mem_percent_output = mem_percent_output[i-1:]
+
+    return mem_percent_output
+
+
 def get_total_mem():
     '''Gets the total system RAM memory from /proc/meminfo. Only works on
     Linux machines'''
@@ -76,8 +88,7 @@ def calculate_process_memory_usage(proc_usage, total_memory):
     '''Calculates memory in kb using process percentage and total memory of
     the system'''
     try:
-        if "\n" not in proc_usage:
-            return round((((float(proc_usage) / 100) * int(total_memory))), 2)
+        return round((((float(proc_usage) / 100) * int(total_memory))), 2)
     except ValueError as e:
         print repr(e)
         logging.error(e)
