@@ -199,6 +199,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename='monitor.log', level=logging.INFO, 
                         filemode='a', 
                         format='%(asctime)s - [%(levelname)s] - %(message)s')
+    logging.info('')    # Easier to differentiate between processes in log
 
     output_files_name = "Output_Files"
 
@@ -224,4 +225,3 @@ if __name__ == "__main__":
         Plot.plot_data(process, end_time, process_folder_dir)
 
     end_message(end_time, output_folder_dir)
-    logging.info('')    # Easier to differentiate between processes in log
