@@ -18,7 +18,7 @@ You will need the following installed:
 - Python 2.7
 
 The following packages are optional. The program will still run without these installed.
-- matplotlib (in order to plot memory data)
+- matplotlib (in order to plot memory data) and python tkinter (required to display GUI for plot chart)
 - xlwt (in order to convert text data into an excel file)
 
 ### Installing Program
@@ -35,6 +35,10 @@ To install the packages, run the following commands inside your terminal
 
 ```
 sudo apt-get install python-matplotlib
+```
+
+```
+sudo apt-get install python-tk
 ```
 
 ```
